@@ -1,0 +1,228 @@
+{
+	"info": {
+		"_postman_id": "4c036543-79d4-4ac1-a143-1085ed90c5cc",
+		"name": "Collection ASN",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "29080485",
+		"_collection_link": "https://www.postman.com/speeding-zodiac-623538/workspace/new-team-workspace/collection/29080485-4c036543-79d4-4ac1-a143-1085ed90c5cc?action=share&source=collection_link&creator=29080485"
+	},
+	"item": [
+		{
+			"name": "GetASNLines",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var responseBody = pm.response.json();\r",
+							"var asnItems = responseBody.data; // Assuming data is an array of ASN items\r",
+							"\r",
+							"var totalShippedQuantity = 0;\r",
+							"\r",
+							"for (var i = 0; i < asnItems.length; i++) {\r",
+							"    var shippedQuantity = asnItems[i].ShippedQuantity;\r",
+							"    totalShippedQuantity += shippedQuantity;\r",
+							"}\r",
+							"\r",
+							"pm.environment.set(\"totalShippedQuantity\", totalShippedQuantity);\r",
+							"console.log(\"Total Shipped Quantity: \" + totalShippedQuantity);\r",
+							"\r",
+							"\r",
+							"\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{access_token_admin@l2}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/x-www-form-urlencoded",
+						"disabled": true
+					},
+					{
+						"key": "Authorization",
+						"value": "Basic b21uaWNvbXBvbmVudC4xLjAuMDpiNHM4cmdUeWc1NVhZTnVu",
+						"disabled": true
+					},
+					{
+						"key": "selectedLocation",
+						"value": "{{FacilityId}}",
+						"type": "text"
+					},
+					{
+						"key": "selectedOrganization",
+						"value": "{{L2OrganizationID}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{app_host}}/receiving/api/receiving/asnLine?query=AsnId = '57760-0117202203'",
+					"host": [
+						"{{app_host}}"
+					],
+					"path": [
+						"receiving",
+						"api",
+						"receiving",
+						"asnLine"
+					],
+					"query": [
+						{
+							"key": "query",
+							"value": "AsnId = '57760-0117202203'"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "AsnReceipt",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"/////\r",
+							"var responseBody = pm.response.json();\r",
+							"var data = responseBody.data;\r",
+							"\r",
+							"var totalQuantity = 0;\r",
+							"\r",
+							"for (var i = 0; i < data.length; i++) {\r",
+							"    totalQuantity += parseFloat(data[i].Quantity);\r",
+							"}\r",
+							"\r",
+							"pm.environment.set(\"totalQuantity\", totalQuantity);\r",
+							"console.log(\"Total Quantity: \" + totalQuantity);\r",
+							"\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{access_token_admin@l2}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/x-www-form-urlencoded",
+						"disabled": true
+					},
+					{
+						"key": "Authorization",
+						"value": "Basic b21uaWNvbXBvbmVudC4xLjAuMDpiNHM4cmdUeWc1NVhZTnVu",
+						"disabled": true
+					},
+					{
+						"key": "selectedLocation",
+						"value": "{{FacilityId}}",
+						"type": "text"
+					},
+					{
+						"key": "selectedOrganization",
+						"value": "{{L2OrganizationID}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{app_host}}/receiving/api/receiving/receipt?query=AsnId in (\"{{ASN_Id1}}\")&size=100",
+					"host": [
+						"{{app_host}}"
+					],
+					"path": [
+						"receiving",
+						"api",
+						"receiving",
+						"receipt"
+					],
+					"query": [
+						{
+							"key": "query",
+							"value": "AsnId in (\"{{ASN_Id1}}\")"
+						},
+						{
+							"key": "size",
+							"value": "100"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
